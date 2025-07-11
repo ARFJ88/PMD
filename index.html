@@ -223,6 +223,27 @@
         .portfolio-card {
             position: relative; /* Ensure z-index works */
             z-index: 10; /* Higher z-index to ensure clickability */
+            cursor: pointer; /* Explicitly set cursor to pointer */
+        }
+        /* Adjust image fitting for portfolio cards */
+        .portfolio-card .h-48 > div { /* Target the div inside h-48 that has the background image */
+            height: 100%;
+            width: 100%;
+            background-size: cover; /* Default to cover for general photos */
+            background-position: center; /* Center by default */
+            background-repeat: no-repeat;
+            background-color: #f0f0f0; /* Light background to fill empty space */
+        }
+        /* Specific override for 661 Lexington Ave to show upper parts */
+        .portfolio-card[data-id="lex661"] .h-48 > div {
+            background-position: top; /* Prioritize top of the image */
+            background-size: cover; /* Ensure it covers the area */
+        }
+        /* Specific override for 55th St massing to ensure aspect ratio is maintained and is narrower */
+        .portfolio-card[data-id="w55"] .h-48 > div {
+            background-size: 70% auto; /* Make image 70% width, auto height to maintain aspect ratio */
+            background-color: #FFFFFF; /* White background for massing diagram */
+            background-position: center; /* Center the contained image */
         }
     </style>
 </head>
@@ -422,7 +443,7 @@
                         <p class="mt-4 text-lg text-gray-600">Manhattan's finite land supply and stringent zoning regulations create inherent value appreciation, ensuring that well-executed developments command premium pricing. Our strategic focus allows us to capitalize on this scarcity.</p>
                     </div>
                     <div class="bg-white p-8 rounded-lg card-shadow border border-gray-200">
-                        <h3 class="text-2xl font-bold text-gray-900">Strategic Growth Areas</h3>
+                        <h3 class="2xl font-bold text-gray-900">Strategic Growth Areas</h3>
                         <p class="mt-4 text-lg text-gray-600">Specific submarkets continue to experience significant growth and transformation, offering opportunities for repositioning and new development that cater to evolving tenant and resident preferences (e.g., modern office spaces, amenity-rich residential buildings).</p>
                     </div>
                     <div class="bg-white p-8 rounded-lg card-shadow border border-gray-200">
@@ -443,7 +464,7 @@
                         <div class="bg-white/10 p-6 rounded-lg">
                            <h3 class="lg font-bold">Grant Shapolsky</h3>
                            <p>Founder, Managing Director</p>
-                           <a href="mailto:grant@primemanhattandev.com" class="mt-2 inline-block text-amber-200 hover:text-white">grant@primemanhattandev.com</a>
+                           <a href="mailto:grant@primemanhattadnev.com" class="mt-2 inline-block text-amber-200 hover:text-white">grant@primemanhattadnev.com</a>
                            <p class="mt-1">T: +1 917-887-1309</p>
                         </div>
                         <div class="bg-white/10 p-6 rounded-lg">
@@ -480,7 +501,7 @@
                     name: "43-45 & 47-49 W 55th St",
                     location: "New York, NY",
                     category: "Bundled Offering",
-                    imageUrl: "https://images.unsplash.com/photo-1560440021-33f9b867899d?q=80&w=1974&auto=format&fit=crop",
+                    imageUrl: "https://i.imgur.com/HR972Er.png", // Updated to direct Imgur image URL
                     description: "A bundled investment opportunity involving two prime commercial properties in Midtown Manhattan. The plan includes new construction of 45,000 SF of high-end residential condos and repositioning 19,000 SF of existing high-end residential rentals.",
                     investmentThesis: "Capitalizing on the enduring demand for luxury residential living in one of Manhattan's most sought-after locations, with substantial upside potential through strategic development and potential air rights.",
                     financials: {
@@ -494,7 +515,7 @@
                     name: "661 Lexington Avenue",
                     location: "New York, NY",
                     category: "Bundled Offering",
-                    imageUrl: "https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=2106&auto=format&fit=crop",
+                    imageUrl: "https://i.imgur.com/LBTwBui.png", // Updated to direct Imgur image URL
                     description: "A mixed-use office building in bustling Midtown East, slated for significant repositioning and potential redevelopment. The existing 60,000 SF property has additional potential for 20,000 SF of space with pending air rights negotiations.",
                     investmentThesis: "Transforming a well-located asset into a high-value property by capitalizing on its proximity to major transportation hubs and high-end amenities, with significant upside from increased square footage and modernizing the space.",
                     financials: {
@@ -510,7 +531,7 @@
                     name: "123 Williams Street",
                     location: "New York, NY",
                     category: "Future Development",
-                    imageUrl: "https://images.unsplash.com/photo-1542322393-34440f8b8e6b?q=80&w=2070&auto=format&fit=crop",
+                    imageUrl: "https://media.truva.com/image/upload/t_large_image/t_invisible_watermark/f_auto/nn87ynzjdekc8atxgocn",
                     description: "Details to be provided soon. This project will further diversify the fund's portfolio within NYC, leveraging PMD's expertise in development and repositioning.",
                     investmentThesis: "This future project is poised to capitalize on emerging trends in a key Manhattan submarket, representing a strategic addition to the Fund's portfolio.",
                     financials: null
@@ -522,7 +543,7 @@
                     name: "The Mandarin Oriental Residences",
                     location: "685 Fifth Avenue, New York, NY",
                     category: "Ultra-Luxury Conversion",
-                    imageUrl: "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?q=80&w=2070&auto=format&fit=crop",
+                    imageUrl: "https://blocksandlots.com/wp-content/uploads/2021/10/mandarin-oriental-residences-5th-ave-condo-785x1024.jpg",
                     description: "A 30-story ultra-luxurious hotel residence, converted from an existing 24-story residential building. Involved the structural demolition of the top 4 floors and adding 10 new stories, while retail remained operational below.",
                     keyAchievements: "Award-winning project recognized for excellence in construction. Units selling for over $6,000/SF. Demonstrated complex structural engineering and operational management.",
                     value: "Approx. $98.6 Million"
@@ -532,7 +553,7 @@
                     name: "The Radio Hotel",
                     location: "2420 Amsterdam Avenue, New York, NY",
                     category: "Mixed-Use Development",
-                    imageUrl: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=2070&auto=format&fit=crop",
+                    imageUrl: "https://tdr.aaa.com/tdr-images/images/property_photo/accommodation/282176H1.jpg",
                     description: "A 24-story mixed-use structure featuring Class A office space, hotel guestrooms, retail, and a restaurant. Stands at 459-ft, one of the highest elevations in Manhattan.",
                     keyAchievements: "Award-winning architecture and design, recognized as one of the Top 10 Architecture Design Projects of 2022 by Dezeen Magazine. Showcases expertise in large-scale mixed-use development.",
                     value: "Approx. $103 Million"
@@ -542,7 +563,7 @@
                     name: "The Central at 5th Hilton Club",
                     location: "12 East 48th Street, New York, NY",
                     category: "Hospitality Development",
-                    imageUrl: "https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1925&auto=format&fit=crop",
+                    imageUrl: "https://newyorkyimby.com/wp-content/uploads/2021/05/image00013-Copy-777x583.jpeg",
                     description: "A 31-story new ground-up extended-stay hotel tower with 161 guestrooms, featuring a distinctive metallic facade and high-end amenities.",
                     keyAchievements: "Awarded for Commercial Hotels Excellence in Construction. Demonstrated ability to deliver sophisticated hospitality projects in prime Midtown locations.",
                     value: "Approx. $67 Million"
@@ -552,7 +573,7 @@
                     name: "75 Kenmare Street",
                     location: "New York, NY",
                     category: "Luxury Condominium",
-                    imageUrl: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=2071&auto=format&fit=crop",
+                    imageUrl: "https://rinaldinyc.com/wp-content/uploads/2020/08/75ken-1-1200x800.jpg",
                     description: "A 7-story new ground-up ultra-high-end luxury condominium building with 35 units and a state-of-the-art automated underground parking system.",
                     keyAchievements: "Received 18 different design and building awards, including the BLT Built Design Award. Showcased innovative construction techniques and luxury design.",
                     value: "Undisclosed"
