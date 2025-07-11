@@ -10,8 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Sophisticated Neutrals -->
-    <!-- Application Structure Plan: A single-page application where content is organized into distinct, full-viewport sections (slides). Only one section is displayed at a time, controlled by navigation links and previous/next buttons. Each section is vertically scrollable if its content exceeds the viewport height. This structure was chosen for its robustness and reliability in iframe environments, ensuring all content is visible and accessible without rendering issues, while still providing a clear, linear presentation flow like a traditional deck. -->
-    <!-- Visualization & Content Choices: Key statistics are presented with dynamic counters for immediate impact on the hero slide. The core portfolio section features interactive cards that, when clicked, open a modal displaying detailed project information and financial projections (IRR, Multiple, ROI) visualized using Chart.js bar charts. Textual content is structured with clear headings and introductory paragraphs in each section to provide context and guide the user. The design prioritizes readability, clarity, and direct interaction to make complex real estate information easily consumable. -->
+    <!-- Application Structure Plan: A single-page application where content is organized into distinct, full-viewport sections (slides). Only one section is displayed at a time, controlled by navigation links and previous/next buttons. Each section is vertically scrollable if its content exceeds the viewport height. The "Portfolio" is now split into two dedicated slides: "Pipeline Projects" and "Track Record Projects," each displaying its respective interactive project cards. This structure was chosen for its robustness and reliability in iframe environments, ensuring all content is visible and accessible without rendering issues, while providing a clear, linear presentation flow like a traditional deck with expanded content. -->
+    <!-- Visualization & Content Choices: Key statistics are presented with dynamic counters on the hero slide. The project portfolio features interactive cards that, when clicked, open a modal displaying detailed project information and financial projections (IRR, Multiple, ROI) visualized using Chart.js bar charts. Textual content is structured with clear headings and introductory paragraphs in each section to provide context and guide the user. The design prioritizes readability, clarity, and direct interaction to make complex real estate information easily consumable, now with more dedicated space per content area. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         html, body {
@@ -85,19 +85,145 @@
             margin-right: auto;
             padding: 0 1rem; /* Inner padding for content blocks */
             box-sizing: border-box;
+            min-height: 100%; /* Ensure it stretches to full slide height */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+            /* Removed justify-content: center; to allow content to flow from top */
         }
         /* Adjustments for specific sections to remove text-align center if not desired for all content */
-        #about .slide-content-container, #strategy .slide-content-container, #team .slide-content-container {
+        #about .slide-content-container, #strategy .slide-content-container, #team .slide-content-container,
+        #pipeline-projects .slide-content-container, #track-record-projects .slide-content-container,
+        #nyc-market .slide-content-container {
             text-align: left; /* Default text alignment for these sections */
         }
-        #about .slide-content-container > div, #strategy dl, #team .grid {
+        #about .slide-content-container > div, #strategy dl, #team .grid,
+        #pipeline-projects .portfolio-grid-wrapper, #track-record-projects .portfolio-grid-wrapper {
             text-align: left; /* Ensure inner content aligns left */
             width: 100%; /* Ensure these elements take full width of their container */
         }
-        #portfolio .slide-content-container {
-            text-align: center; /* Keep portfolio section centered */
+        /* Adjust team section grid alignment */
+        #team .grid {
+            align-items: flex-start;
         }
-
+        /* New: Hero section gradient overlay */
+        #hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(248,247,244,0.7) 0%, rgba(248,247,244,0.3) 50%, rgba(248,247,244,0) 100%);
+            z-index: 1;
+        }
+        /* New: Subtle background for F8F7F4 sections */
+        #about, #pipeline-projects, #nyc-market {
+            background-color: #F8F7F4;
+            position: relative;
+            overflow: hidden; /* Ensure pattern doesn't bleed */
+        }
+        #about::after, #pipeline-projects::after, #nyc-market::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, #E0E0E0 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        /* New: Subtle shadow for white sections */
+        #strategy, #track-record-projects, #team {
+            background-color: #FFFFFF;
+            box-shadow: 0 0px 15px rgba(0,0,0,0.05); /* Subtle shadow */
+            position: relative;
+            z-index: 1; /* Ensure shadow is visible */
+        }
+        /* New: Content block backgrounds/borders */
+        #about .bg-white, #strategy dl div.relative, #team .text-center, #nyc-market .grid > div {
+            background-color: rgba(255,255,255,0.7); /* Slightly transparent white for depth */
+            backdrop-filter: blur(2px); /* Subtle blur for background elements */
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            border: 1px solid rgba(220,220,220,0.5); /* Subtle border */
+        }
+        /* Specific override for strategy list items, as they are already relative divs */
+        #strategy dl div.relative {
+            background-color: rgba(255,255,255,0.8); /* Slightly more opaque */
+            padding: 1.5rem;
+        }
+        /* Team cards solid white with stronger shadow */
+        #team .text-center {
+            background-color: #FFFFFF;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border: none; /* Remove border if it clashes */
+        }
+        /* Contact section specific styling for readability */
+        #contact {
+            background-color: #333333; /* Darker background for contrast */
+            position: relative;
+            overflow: hidden;
+            color: #FFFFFF; /* Ensure text is white */
+        }
+        #contact::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, #555555 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        #contact .bg-amber-700\/90 { /* This targets the inner contact box */
+            background-color: rgba(255, 255, 255, 0.1); /* Very subtle overlay */
+            backdrop-filter: blur(3px);
+            border: 1px solid rgba(255,255,255,0.2); /* Light border */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            color: #FFFFFF; /* Ensure text is white */
+        }
+        #contact .bg-white\/10 { /* This targets individual contact cards */
+            background-color: rgba(255, 255, 255, 0.15); /* Slightly more opaque for cards */
+            border: 1px solid rgba(255,255,255,0.3); /* Clearer border */
+            box-shadow: none; /* Remove redundant shadow */
+        }
+        #contact a {
+            color: #FBBF24; /* Amber for links */
+            text-decoration: underline;
+        }
+        #contact a:hover {
+            color: #FFFFFF;
+        }
+        /* Specific styling for the 'About' section's integrated content */
+        #about .integrated-content-block {
+            background-color: #F8F7F4; /* Base background */
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-top: 2rem;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05); /* Inner shadow for depth */
+            position: relative;
+            z-index: 1; /* Ensure it's above the pattern */
+        }
+        #about .integrated-content-block::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, #E0E0E0 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.15; /* Slightly stronger pattern */
+            z-index: -1;
+            border-radius: 0.5rem;
+        }
+        #about .rinaldi-highlight {
+            background-color: rgba(255,255,255,0.9); /* More opaque white */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08); /* Stronger shadow */
+            border: 1px solid rgba(220,220,220,0.7); /* Clearer border */
+        }
+        /* Ensure portfolio cards are clickable */
+        .portfolio-card {
+            position: relative; /* Ensure z-index works */
+            z-index: 10; /* Higher z-index to ensure clickability */
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -113,9 +239,11 @@
                     <a href="#" data-slide-index="0" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Home</a>
                     <a href="#" data-slide-index="1" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">About PMD</a>
                     <a href="#" data-slide-index="2" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Strategy</a>
-                    <a href="#" data-slide-index="3" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Portfolio</a>
-                    <a href="#" data-slide-index="4" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Team</a>
-                    <a href="#" data-slide-index="5" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
+                    <a href="#" data-slide-index="3" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Pipeline</a>
+                    <a href="#" data-slide-index="4" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Track Record</a>
+                    <a href="#" data-slide-index="5" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Team</a>
+                    <a href="#" data-slide-index="6" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">NYC Market</a>
+                    <a href="#" data-slide-index="7" class="nav-link text-gray-500 hover:text-gray-900 transition-colors">Contact</a>
                 </nav>
             </div>
         </div>
@@ -154,13 +282,12 @@
                     <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">Our Legacy & Integrated Vision</h2>
                     <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">PMD combines a rich 115-year history in New York City real estate with the modern, in-house construction capabilities of The Rinaldi Group to create unparalleled value.</p>
                 </div>
-                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900">A Legacy of Foresight</h3>
-                        <p class="mt-4 text-lg text-gray-600">The Shapolsky family's involvement in NYC real estate spans over a century. This multi-generational experience provides an unparalleled understanding of market cycles and long-term value creation. Our pioneering history includes being among the first to establish co-ops in Soho and once holding the title of the largest landlord on the Lower East Side, demonstrating our foresight in emerging and iconic neighborhoods.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-lg card-shadow">
-                        <h3 class="2xl font-bold text-gray-900">The Rinaldi Group: Construction Excellence</h3>
+                <div class="integrated-content-block mt-16">
+                    <h3 class="text-2xl font-bold text-gray-900">A Legacy of Foresight</h3>
+                    <p class="mt-4 text-lg text-gray-600">The Shapolsky family's involvement in NYC real estate spans over a century. This multi-generational experience provides an unparalleled understanding of market cycles and long-term value creation. Our pioneering history includes being among the first to establish co-ops in Soho and once holding the title of the largest landlord on the Lower East Side, demonstrating our foresight in emerging and iconic neighborhoods.</p>
+                    
+                    <div class="rinaldi-highlight">
+                        <h3 class="text-2xl font-bold text-gray-900">The Rinaldi Group: Construction Excellence</h3>
                         <p class="mt-4 text-lg text-gray-600">Our partnership with The Rinaldi Group, an award-winning firm with over 30 years of experience, provides an in-house construction arm that ensures quality, efficiency, and cost control. This integration of development and construction is our key competitive advantage, de-risking projects and guaranteeing execution excellence.</p>
                     </div>
                 </div>
@@ -178,7 +305,7 @@
 
                 <div class="mt-12">
                     <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-                        <div class="relative">
+                        <div class="relative bg-white rounded-lg p-6 shadow-md border border-gray-200">
                             <dt>
                                 <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-amber-600 text-white">
                                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -188,7 +315,7 @@
                             <dd class="mt-2 ml-16 text-base text-gray-500">We target luxury residential, Class A/B office for repositioning, high-street retail, and complex mixed-use developments to create a diversified, high-potential portfolio.</dd>
                         </div>
 
-                        <div class="relative">
+                        <div class="relative bg-white rounded-lg p-6 shadow-md border border-gray-200">
                             <dt>
                                 <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-amber-600 text-white">
                                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
@@ -198,7 +325,7 @@
                             <dd class="mt-2 ml-16 text-base text-gray-500">Our generational presence and deep network enable us to consistently secure off-market opportunities, acquiring properties at attractive bases before they reach the wider market.</dd>
                         </div>
 
-                        <div class="relative">
+                        <div class="relative bg-white rounded-lg p-6 shadow-md border border-gray-200">
                             <dt>
                                 <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-amber-600 text-white">
                                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
@@ -208,7 +335,7 @@
                             <dd class="mt-2 ml-16 text-base text-gray-500">Our expertise lies in ground-up development, adaptive reuse, and strategic repositioning, allowing us to transform undervalued assets into highly profitable, iconic properties.</dd>
                         </div>
 
-                        <div class="relative">
+                        <div class="relative bg-white rounded-lg p-6 shadow-md border border-gray-200">
                             <dt>
                                 <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-amber-600 text-white">
                                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /></svg>
@@ -222,24 +349,33 @@
             </div>
         </section>
 
-        <!-- Slide 3: Portfolio Section -->
-        <section id="portfolio" class="slide-section bg-F8F7F4">
+        <!-- Slide 3: Pipeline Projects Section -->
+        <section id="pipeline-projects" class="slide-section bg-F8F7F4">
             <div class="slide-content-container">
                 <div class="text-center">
-                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">Our Portfolio: Past Success & Future Opportunity</h2>
-                    <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Explore our proven track record of delivering high-value projects and our robust pipeline of future investments for the Fund.</p>
-                    <div class="mt-8 flex justify-center space-x-4">
-                        <button id="pipeline-btn" class="filter-btn bg-amber-600 text-white px-6 py-2 rounded-md font-semibold">Pipeline</button>
-                        <button id="track-record-btn" class="filter-btn bg-white text-gray-700 px-6 py-2 rounded-md font-semibold border border-gray-300">Track Record</button>
-                    </div>
+                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">Pipeline: Future Opportunities</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Explore our robust pipeline of future investments for the Fund, showcasing our strategic focus and potential for significant value creation.</p>
                 </div>
-                <div id="portfolio-grid" class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Project cards will be dynamically inserted here -->
+                <div id="pipeline-grid" class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Pipeline project cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Track Record Projects Section -->
+        <section id="track-record-projects" class="slide-section bg-white">
+            <div class="slide-content-container">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">Track Record: Proven Success</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">Review our history of successfully delivering high-value projects, demonstrating our expertise and consistent performance.</p>
+                </div>
+                <div id="track-record-grid" class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Track Record project cards will be dynamically inserted here -->
                 </div>
             </div>
         </section>
         
-        <!-- Slide 4: Team Section -->
+        <!-- Slide 5: Team Section -->
         <section id="team" class="slide-section bg-white">
             <div class="slide-content-container">
                 <div class="text-center">
@@ -248,19 +384,19 @@
                 </div>
                 <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
                     <div class="text-center">
-                        <img class="mx-auto h-32 w-32 rounded-full object-cover" src="https://placehold.co/256x256/E9D8B4/333333?text=GS" alt="Grant Shapolsky">
+                        <img class="mx-auto h-32 w-32 rounded-full object-cover" src="https://static.wixstatic.com/media/f9e890_3777298b579b46a894c9eb0bad1de2a8~mv2.jpg/v1/crop/x_0,y_0,w_264,h_264/fill/w_202,h_202,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Screen%20Shot%202019-11-21%20at%203_30_edited_jp.jpg" alt="Grant Shapolsky" onerror="this.onerror=null; this.src='https://placehold.co/256x256/E9D8B4/333333?text=GS';">
                         <h3 class="mt-6 text-xl font-bold text-gray-900">Grant Shapolsky</h3>
                         <p class="text-amber-600 font-semibold">Founder, Managing Director</p>
                         <p class="mt-2 text-gray-600">A third-generation investor with 30 years of experience, Grant has spearheaded the acquisition and development of over two million square feet in prime Manhattan. His expertise in identifying undervalued assets and navigating complex deals is a core advantage for PMD.</p>
                     </div>
                     <div class="text-center">
-                        <img class="mx-auto h-32 w-32 rounded-full object-cover" src="https://placehold.co/256x256/6B7280/FFFFFF?text=AR" alt="Anthony Rinaldi">
+                        <img class="mx-auto h-32 w-32 rounded-full object-cover" src="https://commercialobserver.com/wp-content/uploads/sites/3/2017/10/20170927-_dsc8202-edit.jpg?quality=80&w=763&h=489&crop=1" alt="Anthony Rinaldi" onerror="this.onerror=null; this.src='https://placehold.co/256x256/6B7280/FFFFFF?text=AR';">
                         <h3 class="mt-6 text-xl font-bold text-gray-900">Anthony Rinaldi</h3>
                         <p class="text-amber-600 font-semibold">Head of Construction, The Rinaldi Group</p>
                         <p class="mt-2 text-gray-600">With over 30 years in construction, Anthony leads the award-winning Rinaldi Group. His portfolio includes over $2.1 billion in contract value on some of New York's most prestigious projects, ensuring unparalleled execution and quality control for every PMD development.</p>
                     </div>
                     <div class="text-center md:col-span-2">
-                        <img class="mx-auto h-32 w-32 rounded-full object-cover" src="https://placehold.co/256x256/D1C4E9/4A148C?text=AJ" alt="Ace Jonas">
+                        <img class="mx-auto h-28 w-28 rounded-full object-cover" src="https://realestatenetworkny.com/wp-content/uploads/2024/02/Ace-Jonas-768x768.jpg.webp" alt="Ace Jonas" onerror="this.onerror=null; this.src='https://placehold.co/256x256/D1C4E9/4A148C?text=AJ';">
                         <h3 class="mt-6 text-xl font-bold text-gray-900">Ace Jonas</h3>
                         <p class="text-amber-600 font-semibold">Partner, Backcountry Capital</p>
                         <p class="mt-2 text-gray-600">Ace Jonas of Backcountry Capital partners with Grant and PMD, bringing additional strategic insight and financial acumen to the team's integrated approach.</p>
@@ -269,8 +405,36 @@
             </div>
         </section>
 
-        <!-- Slide 5: Contact Section -->
-        <section id="contact" class="slide-section bg-F8F7F4">
+        <!-- Slide 6: NYC Market Opportunity Section -->
+        <section id="nyc-market" class="slide-section bg-F8F7F4">
+            <div class="slide-content-container">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">New York City Market Opportunity</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">New York City's real estate market remains a global beacon of stability and opportunity, characterized by high barriers to entry and consistent demand drivers.</p>
+                </div>
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+                    <div class="bg-white p-8 rounded-lg card-shadow border border-gray-200">
+                        <h3 class="text-2xl font-bold text-gray-900">Resilient Demand</h3>
+                        <p class="mt-4 text-lg text-gray-600">Despite economic fluctuations, New York City continues to attract a robust influx of high-net-worth individuals, global corporations, and diverse talent, sustaining demand for luxury residential, prime office, and vibrant retail spaces.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg card-shadow border border-gray-200">
+                        <h3 class="text-2xl font-bold text-gray-900">Limited Supply & Value Appreciation</h3>
+                        <p class="mt-4 text-lg text-gray-600">Manhattan's finite land supply and stringent zoning regulations create inherent value appreciation, ensuring that well-executed developments command premium pricing. Our strategic focus allows us to capitalize on this scarcity.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg card-shadow border border-gray-200">
+                        <h3 class="text-2xl font-bold text-gray-900">Strategic Growth Areas</h3>
+                        <p class="mt-4 text-lg text-gray-600">Specific submarkets continue to experience significant growth and transformation, offering opportunities for repositioning and new development that cater to evolving tenant and resident preferences (e.g., modern office spaces, amenity-rich residential buildings).</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg card-shadow border border-gray-200">
+                        <h3 class="text-2xl font-bold text-gray-900">Flight to Quality</h3>
+                        <p class="mt-4 text-lg text-gray-600">In uncertain times, capital tends to flow towards high-quality, well-located assets. PMD's expertise in this segment ensures that our projects meet the highest standards, attracting discerning investors and tenants.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Contact Section -->
+        <section id="contact" class="slide-section">
             <div class="slide-content-container">
                 <div class="bg-amber-700/90 rounded-2xl p-8 md:p-12 lg:p-16 text-center">
                     <h2 class="text-3xl font-extrabold text-white">Partner with Prime Manhattan Development</h2>
@@ -403,9 +567,8 @@
             const nextBtn = document.getElementById('next-slide');
             let currentSlideIndex = 0;
 
-            const portfolioGrid = document.getElementById('portfolio-grid');
-            const pipelineBtn = document.getElementById('pipeline-btn');
-            const trackRecordBtn = document.getElementById('track-record-btn');
+            const pipelineGrid = document.getElementById('pipeline-grid');
+            const trackRecordGrid = document.getElementById('track-record-grid');
             const modal = document.getElementById('project-modal');
             const modalContent = document.getElementById('modal-content');
 
@@ -435,8 +598,11 @@
                     animateStat(fundSizeEl, 50, 1500, 'M');
                     animateStat(portfolioValueEl, 2, 1500, '.1B+');
                 }
-                if (index === 3) {
-                    renderPortfolio('pipeline');
+                // Render specific portfolio grids when their slides are active
+                if (index === 3) { // Pipeline Projects slide
+                    renderPortfolio(pipelineGrid, portfolioData.pipeline);
+                } else if (index === 4) { // Track Record Projects slide
+                    renderPortfolio(trackRecordGrid, portfolioData.trackRecord);
                 }
             };
 
@@ -468,7 +634,7 @@
 
             const createCard = (project) => {
                 const card = document.createElement('div');
-                card.className = 'portfolio-card bg-white rounded-lg overflow-hidden card-shadow transition-all duration-300 transform hover:-translate-y-1 cursor-pointer';
+                card.className = 'portfolio-card bg-white rounded-lg overflow-hidden card-shadow transition-all duration-300 transform hover:-translate-y-1 cursor-pointer relative z-10'; /* Added relative z-10 */
                 card.dataset.id = project.id;
                 card.dataset.type = project.financials ? 'pipeline' : 'trackRecord';
 
@@ -480,33 +646,21 @@
                         <p class="mt-1 text-gray-500">${project.location}</p>
                     </div>
                 `;
-                card.addEventListener('click', () => openModal(project));
+                card.addEventListener('click', () => {
+                    openModal(project);
+                });
                 return card;
             };
 
-            const renderPortfolio = (filter) => {
-                portfolioGrid.innerHTML = '';
-                const projects = portfolioData[filter];
+            const renderPortfolio = (targetGrid, projects) => {
+                if (!targetGrid) {
+                    return;
+                }
+                targetGrid.innerHTML = ''; // Clear previous content
                 projects.forEach(project => {
-                    portfolioGrid.appendChild(createCard(project));
+                    targetGrid.appendChild(createCard(project));
                 });
             };
-
-            pipelineBtn.addEventListener('click', () => {
-                renderPortfolio('pipeline');
-                pipelineBtn.classList.add('bg-amber-600', 'text-white');
-                pipelineBtn.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-300');
-                trackRecordBtn.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-300');
-                trackRecordBtn.classList.remove('bg-amber-600', 'text-white');
-            });
-
-            trackRecordBtn.addEventListener('click', () => {
-                renderPortfolio('trackRecord');
-                trackRecordBtn.classList.add('bg-amber-600', 'text-white');
-                trackRecordBtn.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-300');
-                pipelineBtn.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-300');
-                pipelineBtn.classList.remove('bg-amber-600', 'text-white');
-            });
             
             const openModal = (project) => {
                 let financialContent = '';
